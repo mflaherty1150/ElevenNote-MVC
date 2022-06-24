@@ -1,4 +1,6 @@
-﻿using ElevenNote.Models.Note;
+﻿using ElevenNote.Data;
+using ElevenNote.Models.Category;
+using ElevenNote.Models.Note;
 
 namespace ElevenNote.Services.NoteService
 {
@@ -10,5 +12,6 @@ namespace ElevenNote.Services.NoteService
         NoteDetail GetNoteById(int id);
         bool UpdateNote(NoteEdit model);
         bool DeleteNote(int noteId);
+        IEnumerable<CategoryListItem> CreateCategoryDropDownList();
     }
 }

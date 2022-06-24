@@ -1,8 +1,11 @@
 ﻿using ElevenNote.Data;
+using ElevenNote.Models.Category;
 using ElevenNote.Models.Note;
+using ElevenNote.Services.CategoryService;
 using ElevenNote.Services.NoteService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace ElevenNote.WebMvc.Controllers
@@ -11,7 +14,7 @@ namespace ElevenNote.WebMvc.Controllers
     public class NoteController : Controller
     {
         private readonly INoteService _noteService;
-        //private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;  // You should try to NEVER have access to the data layer from the controller when building an n-tier application
 
         public NoteController(INoteService noteService/*, ApplicationDbContext context*/)
         {
@@ -51,6 +54,7 @@ namespace ElevenNote.WebMvc.Controllers
 
         public ActionResult Create()
         {
+            ViewBag.CategorySelectList = new SelectList(GetCategoryDropDownList(),"CategoryId", "Name");
             return View();
         }
 
@@ -64,6 +68,9 @@ namespace ElevenNote.WebMvc.Controllers
             {
                 return View(model);
             }
+
+            ViewBag.CategorySelectList = new SelectList(GetCategoryDropDownList(), "CategoryId", "Name");
+
 
             if (_noteService.CreateNote(model))
             {
@@ -141,6 +148,12 @@ namespace ElevenNote.WebMvc.Controllers
             _noteService.DeleteNote(id);
             TempData["SaveResult"] = "Your note was deleted!";
             return RedirectToAction(nameof(Index));
+        }
+
+        private IEnumerable<CategoryListItem> GetCategoryDropDownList()
+        {
+            if (!SetUserIdInService()) return default;
+            return _noteService.CreateCategoryDropDownList();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ElevenNote.Data;
+using ElevenNote.Models.Category;
 using ElevenNote.Models.Note;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace ElevenNote.Services.NoteService
                 OwnerId = _userId,
                 Title = model.Title,
                 Content = model.Content,
+                CategoryId = model.CategoryId,
                 CreatedUtc = DateTimeOffset.Now
             };
 
@@ -42,6 +44,7 @@ namespace ElevenNote.Services.NoteService
                         NoteId = e.NoteId,
                         Title = e.Title,
                         CreatedUtc = e.CreatedUtc,
+                        CategoryName = e.Category.Name
                     }).ToList();
             return notes;
         }
@@ -80,6 +83,15 @@ namespace ElevenNote.Services.NoteService
 
             return _context.SaveChanges() == 1;
         }
+
+        public IEnumerable<CategoryListItem> CreateCategoryDropDownList()
+        {
+            var categoryService = new CategoryService.CategoryService(_context);
+            categoryService.SetUserId(_userId);
+            var userCategories = categoryService.GetAllCategories().Where(e => e.OwnwerId == _userId);
+            return userCategories;
+        }
+
 
         public void SetUserId(Guid userId) => _userId = userId;
     }

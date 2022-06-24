@@ -43,6 +43,7 @@ namespace ElevenNote.Services.NoteService
                     {
                         NoteId = e.NoteId,
                         Title = e.Title,
+                        IsStarred = e.IsStarred,
                         CreatedUtc = e.CreatedUtc,
                         CategoryName = e.Category.Name
                     }).ToList();

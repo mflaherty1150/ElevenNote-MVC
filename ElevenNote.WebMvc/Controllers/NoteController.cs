@@ -14,11 +14,13 @@ namespace ElevenNote.WebMvc.Controllers
     public class NoteController : Controller
     {
         private readonly INoteService _noteService;
+        private readonly ICategoryService _categoryService;
         //private readonly ApplicationDbContext _context;  // You should try to NEVER have access to the data layer from the controller when building an n-tier application
 
-        public NoteController(INoteService noteService)
+        public NoteController(INoteService noteService, ICategoryService categoryService)
         {
             _noteService = noteService;
+            _categoryService = categoryService;
         }
 
         //In this method, we will first need to get the User Id as a string from the token -> data from the token is stored
